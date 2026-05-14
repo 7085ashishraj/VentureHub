@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class RoomMember extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -14,11 +14,7 @@ class Project extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ventureStage() {
-        return $this->belongsTo(VentureStage::class);
-    }
-
-    public function ventureRooms() {
-        return $this->hasMany(VentureRoom::class);
+    public function ventureRoom() {
+        return $this->belongsTo(VentureRoom::class);
     }
 }

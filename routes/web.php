@@ -27,6 +27,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/network', [ProfileController::class, 'index'])->name('network.index');
     Route::get('/network/{user}', [ProfileController::class, 'show'])->name('network.show');
+
+    // Venture Rooms Phase 2
+    Route::resource('venture-rooms', \App\Http\Controllers\VentureRoomController::class);
+    Route::put('/lean-canvases/{lean_canva}', [\App\Http\Controllers\LeanCanvasController::class, 'update'])->name('lean-canvases.update');
+    Route::post('/venture-rooms/{venture_room}/milestones', [\App\Http\Controllers\MilestoneController::class, 'store'])->name('milestones.store');
+    Route::put('/milestones/{milestone}', [\App\Http\Controllers\MilestoneController::class, 'update'])->name('milestones.update');
+    
+    Route::get('/templates', [\App\Http\Controllers\DocumentTemplateController::class, 'index'])->name('templates.index');
+
+    // Phase 3: The Trusted Exchange
+    Route::resource('pitches', \App\Http\Controllers\PitchController::class)->except(['edit', 'update', 'destroy']);
+    
+    Route::post('/venture-rooms/{venture_room}/sweat-equity', [\App\Http\Controllers\SweatEquityTaskController::class, 'store'])->name('sweat-equity.store');
+    Route::post('/sweat-equity/{task}/claim', [\App\Http\Controllers\SweatEquityTaskController::class, 'claim'])->name('sweat-equity.claim');
+    Route::post('/sweat-equity/{task}/complete', [\App\Http\Controllers\SweatEquityTaskController::class, 'complete'])->name('sweat-equity.complete');
+
+    Route::post('/users/{user}/endorse/{skill}', [\App\Http\Controllers\EndorsementController::class, 'store'])->name('endorsements.store');
 });
 
 Route::middleware('auth')->group(function () {

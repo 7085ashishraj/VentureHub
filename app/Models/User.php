@@ -40,6 +40,34 @@ class User extends Authenticatable
     public function events() {
         return $this->hasMany(Event::class);
     }
+    
+    public function profile() {
+        return $this->hasOne(Profile::class);
+    }
+
+    public function skills() {
+        return $this->belongsToMany(Skill::class, 'user_skill')->withPivot('proficiency')->withTimestamps();
+    }
+
+    public function needs() {
+        return $this->belongsToMany(Skill::class, 'user_need')->withPivot('description')->withTimestamps();
+    }
+
+    public function ventureRoomsCreated() {
+        return $this->hasMany(VentureRoom::class, 'creator_id');
+    }
+
+    public function roomMemberships() {
+        return $this->hasMany(RoomMember::class);
+    }
+
+    public function pitches() {
+        return $this->hasMany(Pitch::class);
+    }
+
+    public function connections() {
+        return $this->hasMany(Connection::class, 'requester_id')->orWhere('recipient_id', $this->id);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -61,6 +89,15 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_verified' => 'boolean',
         ];
+    }
+
+    public function endorsementsReceived() {
+        return $this->hasMany(SkillEndorsement::class, 'endorsee_id');
+    }
+
+    public function endorsementsGiven() {
+        return $this->hasMany(SkillEndorsement::class, 'endorser_id');
     }
 }

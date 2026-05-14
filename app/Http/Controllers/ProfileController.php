@@ -19,7 +19,12 @@ class ProfileController extends Controller
 
     public function show(\App\Models\User $user): View
     {
-        return view('network.show', ['user' => $user] );
+        $user->load(['profile', 'skills', 'needs']);
+
+        // Stub for mutual connections logic to be implemented later
+        $mutualConnections = 0;
+
+        return view('profile.matrix', compact('user', 'mutualConnections'));
     }
 
     /**

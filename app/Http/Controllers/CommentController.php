@@ -14,7 +14,7 @@ class CommentController extends Controller
         
         $post->comments()->create([
             'user_id' => $request->user()->id,
-            'content' => $request->content,
+            'content' => $request->input('content'),
         ]);
         
         return back()->with('success', 'Comment added!');
