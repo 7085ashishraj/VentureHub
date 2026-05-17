@@ -1,71 +1,102 @@
 <x-app-layout>
-    <div class="min-h-screen bg-slate-900 text-slate-200 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+    <div class="min-h-screen bg-zinc-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
         <div class="max-w-7xl mx-auto">
-            <div class="flex justify-between items-center mb-12">
+
+            {{-- Page Header --}}
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-14">
                 <div>
-                    <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-500 mb-2">
+                    <p class="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em] mb-2">Deal Pipeline</p>
+                    <h1 class="text-5xl font-black text-zinc-900 uppercase tracking-widest leading-none">
                         Deal Flow
                     </h1>
-                    <p class="text-slate-400 text-lg">Structured pitches from verified entrepreneurs.</p>
+                    <div class="mt-3 w-16 h-1 bg-zinc-900"></div>
+                    <p class="mt-4 text-zinc-500 font-bold text-sm uppercase tracking-widest">Structured pitches from verified entrepreneurs.</p>
                 </div>
-                <a href="{{ route('pitches.create') }}" class="px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all">
-                    Submit Pitch
+                <a href="{{ route('pitches.create') }}"
+                   class="shrink-0 px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest border border-transparent transition-all shadow-[6px_6px_0px_0px_rgba(37,99,235,0.35)] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px]">
+                    + Submit Pitch
                 </a>
             </div>
 
+            {{-- Flash Message --}}
+            @if (session('success'))
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+                    class="mb-8 bg-blue-600 text-white px-6 py-4 rounded-xl border border-blue-500 flex items-center gap-3 font-black uppercase tracking-widest text-sm shadow-lg">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- Pitch Cards Grid --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 @forelse($pitches as $pitch)
-                    <div class="bg-slate-800/50 backdrop-blur-md rounded-3xl border border-slate-700/50 p-8 shadow-xl hover:bg-slate-800 transition duration-300 relative group">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full group-hover:scale-110 transition-transform"></div>
-                        
-                        <div class="flex items-center gap-4 mb-6">
-                            <div class="w-12 h-12 rounded-full border-2 border-emerald-500/30 overflow-hidden">
-                                @if($pitch->user->profile_image)
-                                    <img src="{{ asset('storage/' . $pitch->user->profile_image) }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full bg-slate-700 flex items-center justify-center font-bold text-white">{{ substr($pitch->user->name, 0, 1) }}</div>
-                                @endif
-                            </div>
-                            <div>
-                                <div class="font-bold text-white flex items-center gap-2">
-                                    {{ $pitch->user->name }}
-                                    @if($pitch->user->is_verified)
-                                        <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    <div class="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden shadow-2xl hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.18)] transition-all duration-300 group flex flex-col">
+
+                        {{-- Card Top Bar --}}
+                        <div class="h-1 w-full bg-zinc-800 group-hover:bg-blue-500 transition-colors duration-300"></div>
+
+                        <div class="p-8 flex flex-col flex-grow">
+
+                            {{-- Author Row --}}
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="w-12 h-12 rounded-full border-2 border-zinc-700 overflow-hidden bg-zinc-800 flex items-center justify-center font-black text-white text-lg shadow-lg">
+                                    @if($pitch->user->profile_image)
+                                        <img src="{{ asset('storage/' . $pitch->user->profile_image) }}" class="w-full h-full object-cover grayscale">
+                                    @else
+                                        {{ substr($pitch->user->name, 0, 1) }}
                                     @endif
                                 </div>
-                                <div class="text-xs text-slate-400">{{ $pitch->created_at->diffForHumans() }}</div>
+                                <div>
+                                    <div class="font-black text-white flex items-center gap-2 text-sm">
+                                        {{ $pitch->user->name }}
+                                        @if($pitch->user->is_verified)
+                                            <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                        @endif
+                                    </div>
+                                    <div class="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-0.5">{{ $pitch->created_at->diffForHumans() }}</div>
+                                </div>
                             </div>
-                        </div>
 
-                        <h2 class="text-2xl font-black text-white mb-4">{{ $pitch->title }}</h2>
-                        
-                        <div class="space-y-4 mb-6">
-                            <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
-                                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Problem</h3>
-                                <p class="text-sm text-slate-300 line-clamp-2">{{ $pitch->problem }}</p>
-                            </div>
-                            <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
-                                <h3 class="text-xs font-bold text-emerald-500 uppercase tracking-wider mb-1">Solution</h3>
-                                <p class="text-sm text-slate-300 line-clamp-2">{{ $pitch->solution }}</p>
-                            </div>
-                        </div>
+                            {{-- Title --}}
+                            <h2 class="text-2xl font-black text-white mb-6 uppercase tracking-wide leading-tight">{{ $pitch->title }}</h2>
 
-                        <div class="flex justify-between items-center mt-6 pt-6 border-t border-slate-700/50">
-                            <div>
-                                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">The Ask</h3>
-                                <div class="text-emerald-400 font-bold">{{ $pitch->ask ?? 'Contact for details' }}</div>
+                            {{-- Problem / Solution Blocks --}}
+                            <div class="space-y-4 mb-8 flex-grow">
+                                <div class="bg-zinc-800 p-5 rounded-2xl border border-zinc-700">
+                                    <h3 class="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">Problem</h3>
+                                    <p class="text-sm font-bold text-white line-clamp-2 leading-relaxed">{{ $pitch->problem }}</p>
+                                </div>
+                                <div class="bg-zinc-800 p-5 rounded-2xl border border-zinc-700">
+                                    <h3 class="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">Solution</h3>
+                                    <p class="text-sm font-bold text-white line-clamp-2 leading-relaxed">{{ $pitch->solution }}</p>
+                                </div>
                             </div>
-                            <button class="text-sm bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-semibold transition">View Details</button>
+
+                            {{-- Footer --}}
+                            <div class="flex justify-between items-center pt-6 border-t border-zinc-700">
+                                <div>
+                                    <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">The Ask</p>
+                                    <p class="text-white font-black text-sm">{{ $pitch->ask ?? 'Contact for details' }}</p>
+                                </div>
+                                <a href="{{ route('pitches.show', $pitch) }}"
+                                   class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-[10px] border border-transparent transition-all shadow-[4px_4px_0px_0px_rgba(37,99,235,0.4)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                                    View Details →
+                                </a>
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div class="col-span-full py-16 text-center border-2 border-dashed border-slate-700 rounded-3xl text-slate-500">
-                        <svg class="mx-auto h-12 w-12 text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        <h3 class="text-xl font-medium text-slate-300 mb-1">No Pitches Yet</h3>
-                        <p>Be the first to submit a structured pitch to our network.</p>
+                    <div class="col-span-full py-24 text-center border-2 border-dashed border-zinc-300 rounded-3xl bg-white shadow-sm">
+                        <svg class="mx-auto h-16 w-16 text-zinc-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <h3 class="text-2xl font-black text-zinc-900 mb-3 uppercase tracking-widest">No Pitches Yet</h3>
+                        <p class="text-zinc-400 font-bold uppercase tracking-widest text-sm mb-8">Be the first to submit a structured pitch to our network.</p>
+                        <a href="{{ route('pitches.create') }}" class="inline-block px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest transition-all shadow-[6px_6px_0px_0px_rgba(37,99,235,0.35)] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px]">
+                            Submit Your Pitch
+                        </a>
                     </div>
                 @endforelse
             </div>
+
         </div>
     </div>
 </x-app-layout>

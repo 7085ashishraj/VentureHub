@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="text-lg font-medium text-white">
             {{ __('Profile Information') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="mt-1 text-sm text-zinc-400">
             {{ __("Update your account's profile information and email address.") }}
         </p>
     </header>
@@ -49,7 +49,7 @@
 
         <div>
             <x-input-label for="bio" :value="__('Bio / Elevator Pitch')" />
-            <textarea id="bio" name="bio" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" rows="3">{{ old('bio', $user->bio) }}</textarea>
+            <textarea id="bio" name="bio" class="border-zinc-700 bg-zinc-100 dark:bg-zinc-950 text-white focus:border-white focus:ring-white rounded-md shadow-sm mt-1 block w-full" rows="3">{{ old('bio', $user->bio) }}</textarea>
             <x-input-error class="mt-2" :messages="$errors->get('bio')" />
         </div>
 
@@ -86,7 +86,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
+                    class="text-sm text-zinc-400"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>

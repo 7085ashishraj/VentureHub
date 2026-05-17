@@ -26,4 +26,22 @@ class ProjectController extends Controller
 
         return back()->with('success', 'Project posted successfully!');
     }
+
+    public function show(Project $project)
+    {
+        $project->load(['user', 'ventureStage', 'joinedUsers']);
+        return view('projects.show', compact('project'));
+    }
+
+    public function join(Project $project)
+    {
+        $user = auth()->user();
+        if ($project->joinedUsers()->where('user_id', $user->id)->exists()) {
+            $project->joinedUsers()->detach($user->id);
+            return back()->with('success', 'You have left the project.');
+        } else {
+            $project->joinedUsers()->attach($user->id);
+            return back()->with('success', 'You have joined the project.');
+        }
+    }
 }

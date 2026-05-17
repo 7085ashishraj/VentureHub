@@ -1,32 +1,39 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title', config('app.name', 'VentureHub'))</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts: Inter + Lexend from Bunny (GDPR-friendly Google Fonts mirror) -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|lexend:400,500,600,700&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <body class="font-sans antialiased text-gray-100 bg-gray-900 min-h-screen relative selection:bg-indigo-500 selection:text-white">
-        <!-- Stunning Animated Background Elements -->
-        <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-            <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob"></div>
-            <div class="absolute top-[20%] right-[-5%] w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob animation-delay-2000"></div>
-            <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob animation-delay-4000"></div>
-        </div>
+    <!-- Dark Mode Init Script -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
 
-        <div class="min-h-screen bg-gray-900/40 backdrop-blur-3xl">
-            @include('layouts.navigation')
+    <!-- Scripts & Styles -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="h-full font-sans antialiased text-zinc-950 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-950 min-h-screen relative selection:bg-zinc-950 dark:selection:bg-white selection:text-white dark:selection:text-black transition-colors duration-300">
 
+    <div class="h-screen flex overflow-hidden">
+        <!-- Sidebar Navigation -->
+        @include('layouts.navigation')
+
+        <!-- Main Content Wrapper -->
+        <div class="flex-1 flex flex-col overflow-y-auto relative">
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-gray-900/50 backdrop-blur-xl border-b border-gray-700/50 shadow-lg sticky top-0 z-10 transition-all duration-300">
+                <header class="bg-zinc-100 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-0 z-10 transition-colors duration-300">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
@@ -34,21 +41,19 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="py-10">
+            <main class="flex-1 py-10 relative z-0">
                 {{ $slot }}
             </main>
-        </div>
 
-        <style>
-            @keyframes blob {
-                0% { transform: translate(0px, 0px) scale(1); }
-                33% { transform: translate(30px, -50px) scale(1.1); }
-                66% { transform: translate(-20px, 20px) scale(0.9); }
-                100% { transform: translate(0px, 0px) scale(1); }
-            }
-            .animate-blob { animation: blob 7s infinite; }
-            .animation-delay-2000 { animation-delay: 2s; }
-            .animation-delay-4000 { animation-delay: 4s; }
-        </style>
-    </body>
+            <!-- Footer -->
+            <footer class="bg-zinc-100 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 py-6 mt-auto relative z-0">
+                <div class="max-w-7xl mx-auto px-4 text-center text-sm text-zinc-500">
+                    &copy; {{ date('Y') }}
+                    <span class="font-display font-semibold text-zinc-700 dark:text-zinc-300">Venture<span class="text-zinc-950 dark:text-white">Hub</span></span>.
+                    All rights reserved.
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
 </html>

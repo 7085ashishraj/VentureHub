@@ -21,4 +21,8 @@ class Project extends Model
     public function ventureRooms() {
         return $this->hasMany(VentureRoom::class);
     }
+
+    public function joinedUsers() {
+        return $this->belongsToMany(User::class, 'project_user')->withTimestamps();
+    }
 }

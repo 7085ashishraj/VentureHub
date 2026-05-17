@@ -1,3 +1,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        /* Brand (violet) palette */
+        --color-brand-50:  #f4f0ff;
+        --color-brand-100: #e9e0ff;
+        --color-brand-200: #d1c0ff;
+        --color-brand-300: #b39aff;
+        --color-brand-400: #8b6bff;
+        --color-brand-500: #6d28d9;
+        --color-brand-600: #5b21b6;
+        --color-brand-700: #4c1d95;
+        --color-brand-800: #3b0f7a;
+        --color-brand-900: #2e0a5f;
+        --color-brand-950: #1f053f;
+        /* Accent (cyan) palette */
+        --color-accent-50:  #ecfeff;
+        --color-accent-100: #cffafe;
+        --color-accent-400: #22d3ee;
+        --color-accent-500: #06b6d4;
+        --color-accent-600: #0891b2;
+        /* Venture (sky-blue) palette - kept for dashboard backward compat */
+        --color-venture-500: #0ea5e9;
+        --color-venture-600: #0284c7;
+        --color-venture-700: #0369a1;
+    }
+}
+
+@layer utilities {
+    /* Display font utility */
+    .font-display {
+        font-family: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    }
+
+    /* Brand gradient backgrounds */
+    .bg-brand-gradient {
+        background: linear-gradient(135deg, #6d28d9 0%, #06b6d4 100%);
+    }
+    .bg-brand-gradient-dark {
+        background: linear-gradient(135deg, #2e0a5f 0%, #0c0f1a 100%);
+    }
+
+    /* Blob animation for ambient backgrounds */
+    @keyframes blob {
+        0%   { transform: translate(0px,  0px)   scale(1);   }
+        33%  { transform: translate(30px, -50px)  scale(1.1); }
+        66%  { transform: translate(-20px, 20px)  scale(0.9); }
+        100% { transform: translate(0px,  0px)   scale(1);   }
+    }
+    .animate-blob          { animation: blob 7s infinite; }
+    .animation-delay-2000  { animation-delay: 2s; }
+    .animation-delay-4000  { animation-delay: 4s; }
+
+    /* Glow shadow */
+    .shadow-glow      { box-shadow: 0 0 20px rgba(109,40,217,0.30); }
+    .shadow-card      { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); }
+    .shadow-card-hover{ box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.05); }
+}

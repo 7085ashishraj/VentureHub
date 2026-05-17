@@ -21,6 +21,8 @@ class LeanCanvasController extends Controller
             'revenue_streams' => 'nullable|string',
         ]);
         
+        \Log::info('LeanCanvas update called', ['id' => $lean_canva->id, 'exists' => $lean_canva->exists, 'data' => $validated]);
+        
         $lean_canva->update($validated);
         
         return back()->with('success', 'Lean Canvas updated successfully.');

@@ -49,6 +49,10 @@ class VentureRoomController extends Controller
 
     public function show(VentureRoom $venture_room)
     {
+        if (!$venture_room->leanCanvas) {
+            $venture_room->leanCanvas()->create();
+        }
+        
         $venture_room->load(['creator', 'project', 'ventureStage', 'members.user', 'leanCanvas', 'milestones.assignee']);
         return view('venture-rooms.show', compact('venture_room'));
     }

@@ -8,7 +8,10 @@ use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return view('welcome');
+    }
+    return view('welcome-guest');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -20,10 +23,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     
     // Collaboration Hub
-    Route::resource('projects', ProjectController::class);
+    Route::resource('projects', ProjectController::class)->only(['index', 'store', 'show']);
+    Route::post('/projects/{project}/join', [\App\Http\Controllers\ProjectController::class, 'join'])->name('projects.join');
     
     // Events Module
-    Route::resource('events', EventController::class);
+    Route::resource('events', EventController::class)->only(['index', 'store', 'show']);
+    Route::post('/events/{event}/ticket', [\App\Http\Controllers\EventController::class, 'ticket'])->name('events.ticket');
 
     Route::get('/network', [ProfileController::class, 'index'])->name('network.index');
     Route::get('/network/{user}', [ProfileController::class, 'show'])->name('network.show');
@@ -44,6 +49,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/sweat-equity/{task}/complete', [\App\Http\Controllers\SweatEquityTaskController::class, 'complete'])->name('sweat-equity.complete');
 
     Route::post('/users/{user}/endorse/{skill}', [\App\Http\Controllers\EndorsementController::class, 'store'])->name('endorsements.store');
+    
+    // Connections Management
+    Route::post('/users/{user}/connect', [\App\Http\Controllers\ConnectionController::class, 'store'])->name('connections.store');
+    Route::get('/connections', [\App\Http\Controllers\ConnectionController::class, 'index'])->name('connections.index');
+    Route::patch('/connections/{connection}', [\App\Http\Controllers\ConnectionController::class, 'update'])->name('connections.update');
+    Route::delete('/connections/{connection}', [\App\Http\Controllers\ConnectionController::class, 'destroy'])->name('connections.destroy');
+
+    // Chat / Direct Messaging
+    Route::get('/messages/{user?}', [\App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
+    Route::post('/messages/{user}', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
 });
 
 Route::middleware('auth')->group(function () {

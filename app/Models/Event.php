@@ -17,4 +17,8 @@ class Event extends Model
     public function ventureRoom() {
         return $this->belongsTo(VentureRoom::class);
     }
+
+    public function tickets() {
+        return $this->hasMany(EventTicket::class);
+    }
 }

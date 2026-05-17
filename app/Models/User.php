@@ -23,7 +23,6 @@ class User extends Authenticatable
         'email',
         'password',
         'bio',
-        'skills',
         'profile_image',
         'linkedin',
         'github',
@@ -99,5 +98,21 @@ class User extends Authenticatable
 
     public function endorsementsGiven() {
         return $this->hasMany(SkillEndorsement::class, 'endorser_id');
+    }
+
+    public function joinedProjects() {
+        return $this->belongsToMany(Project::class, 'project_user')->withTimestamps();
+    }
+
+    public function eventTickets() {
+        return $this->hasMany(EventTicket::class);
+    }
+
+    public function sentMessages() {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function receivedMessages() {
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 }

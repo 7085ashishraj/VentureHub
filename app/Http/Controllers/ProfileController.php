@@ -21,9 +21,29 @@ class ProfileController extends Controller
     {
         $user->load(['profile', 'skills', 'needs']);
 
-        // Stub for mutual connections logic to be implemented later
         $mutualConnections = 0;
+        
+        if (auth()->check() && auth()->id() !== $user->id) {
+            $authId = auth()->id();
+            
+            $authUserConnections = \App\Models\Connection::where('status', 'accepted')
+                ->where(function($q) use ($authId) {
+                    $q->where('requester_id', $authId)->orWhere('recipient_id', $authId);
+                })
+                ->get()
+                ->map(fn($c) => $c->requester_id === $authId ? $c->recipient_id : $c->requester_id)
+                ->toArray();
 
+            $viewedUserConnections = \App\Models\Connection::where('status', 'accepted')
+                ->where(function($q) use ($user) {
+                    $q->where('requester_id', $user->id)->orWhere('recipient_id', $user->id);
+                })
+                ->get()
+                ->map(fn($c) => $c->requester_id === $user->id ? $c->recipient_id : $c->requester_id)
+                ->toArray();
+
+            $mutualConnections = count(array_intersect($authUserConnections, $viewedUserConnections));
+        }
         return view('profile.matrix', compact('user', 'mutualConnections'));
     }
 
